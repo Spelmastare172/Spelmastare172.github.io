@@ -4,18 +4,20 @@ const modal = document.getElementById('add-recipe-modal');
 const closeButton = modal.querySelector('.close');
 const recipeForm = document.getElementById('recipe-form');
 const instructionsSection = document.getElementById('cooking-instructions');
+const mainContent = document.querySelector('main');
 
-// Retrieve recipes from local storage if available, otherwise initialize as empty array
-let recipes = JSON.parse(localStorage.getItem('recipes')) || [];
+// Retrieve recipes from local storage or initialize an empty array
+const recipes = JSON.parse(localStorage.getItem('recipes')) || [];
 
 // Function to save recipes to local storage
-const saveRecipesToLocalStorage = () => {
+function saveRecipes() {
     localStorage.setItem('recipes', JSON.stringify(recipes));
-};
+}
 
-// Function to render recipe cards with edit and remove buttons
-const renderRecipes = () => {
-    document.querySelector('main').innerHTML = ''; // Clear existing recipe cards
+// Function to render recipes
+function renderRecipes() {
+    mainContent.innerHTML = ''; // Clear the main content
+
     recipes.forEach((recipe, index) => {
         const recipeCard = document.createElement('div');
         recipeCard.classList.add('recipe-card');
@@ -24,59 +26,45 @@ const renderRecipes = () => {
             <p>Ingredients: ${recipe.ingredients}</p>
             <button class="view-details">View Details</button>
             <button class="edit-recipe">Edit</button>
-            <button class="remove-recipe" data-index="${index}">Remove</button>
+            <button class="delete-recipe">Delete</button>
         `;
+
         recipeCard.querySelector('.view-details').addEventListener('click', () => {
             instructionsSection.querySelector('#selected-recipe-instructions').textContent = recipe.instructions;
         });
+
         recipeCard.querySelector('.edit-recipe').addEventListener('click', () => {
-            editRecipe(index);
+            document.getElementById('recipe-title').value = recipe.title;
+            document.getElementById('recipe-ingredients').value = recipe.ingredients;
+            document.getElementById('recipe-instructions').value = recipe.instructions;
+            modal.style.display = 'flex';
+
+            recipes.splice(index, 1); // Remove the old recipe
+            saveRecipes(); // Save the updated recipes
         });
-        recipeCard.querySelector('.remove-recipe').addEventListener('click', (e) => {
-            removeRecipe(e.target.dataset.index);
+
+        recipeCard.querySelector('.delete-recipe').addEventListener('click', () => {
+            recipes.splice(index, 1); // Remove the recipe from the array
+            saveRecipes(); // Save the updated recipes
+            renderRecipes(); // Re-render the recipes
         });
-        document.querySelector('main').appendChild(recipeCard);
+
+        mainContent.appendChild(recipeCard);
     });
-};
+}
 
-// Function to edit a recipe
-const editRecipe = (index) => {
-    const recipeToEdit = recipes[index];
-    document.getElementById('recipe-title').value = recipeToEdit.title;
-    document.getElementById('recipe-ingredients').value = recipeToEdit.ingredients;
-    document.getElementById('recipe-instructions').value = recipeToEdit.instructions;
-    // Show modal
-    modal.style.display = 'block';
-
-    // Remove the original recipe
-    recipes.splice(index, 1);
-
-    // Save recipes to local storage
-    saveRecipesToLocalStorage();
-
-    // Re-render recipe cards
-    renderRecipes();
-};
-
-// Function to remove a recipe
-const removeRecipe = (index) => {
-    // Remove the recipe at the specified index
-    recipes.splice(index, 1);
-
-    // Save recipes to local storage
-    saveRecipesToLocalStorage();
-
-    // Re-render recipe cards
-    renderRecipes();
-};
-
-// Add event listeners
 addRecipeButton.addEventListener('click', () => {
-    modal.style.display = 'block';
+    modal.style.display = 'flex';
 });
 
 closeButton.addEventListener('click', () => {
     modal.style.display = 'none';
+});
+
+window.addEventListener('click', (event) => {
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
 });
 
 recipeForm.addEventListener('submit', (e) => {
@@ -96,10 +84,10 @@ recipeForm.addEventListener('submit', (e) => {
     // Add the new recipe to the array
     recipes.push(newRecipe);
 
-    // Save recipes to local storage
-    saveRecipesToLocalStorage();
+    // Save the recipes to local storage
+    saveRecipes();
 
-    // Render recipe cards
+    // Re-render the recipes
     renderRecipes();
 
     // Close the modal
@@ -111,5 +99,5 @@ recipeForm.addEventListener('submit', (e) => {
     document.getElementById('recipe-instructions').value = '';
 });
 
-// Initial rendering of recipe cards
+// Initial rendering of recipes (if any)
 renderRecipes();
