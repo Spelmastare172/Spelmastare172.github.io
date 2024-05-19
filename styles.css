@@ -1,6 +1,6 @@
 /* styles.css */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     background-color: #f9f9f9;
     margin: 0;
     padding: 0;
@@ -18,25 +18,28 @@ header {
     padding: 1rem;
     margin: 1rem;
     background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
 }
 
-/* Add more styles as needed */
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
 
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-    .recipe-card {
-        margin: 0.5rem;
-        padding: 0.5rem;
-    }
-
-    .modal-content {
-        max-width: 90%; /* Adjust as needed */
-    }
+.btn-primary:hover {
+    background-color: #0056b3;
 }
 
 /* Modal styles */
 .modal {
-    display: none;
+    display: none; /* Ensure the modal is hidden by default */
     position: fixed;
     top: 0;
     left: 0;
@@ -44,24 +47,82 @@ header {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
+    overflow-y: auto; /* Make content scrollable if it exceeds the viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
     background-color: #fff;
-    padding: 1rem;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 5px;
+    padding: 1.5rem;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px; /* Adjust max-width for larger screens */
+    box-sizing: border-box; /* Include padding and border in width and height */
+    margin: auto;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .close {
     position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0.5rem;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
     cursor: pointer;
+}
+
+/* Ensure form elements are stacked vertically */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content form label,
+.modal-content form input,
+.modal-content form textarea,
+.modal-content form button {
+    width: 100%;
+    margin-bottom: 1rem; /* Ensure elements take full width and have spacing */
+    box-sizing: border-box; /* Include padding and border in width and height */
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.modal-content form input,
+.modal-content form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.modal-content form button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.modal-content form button:hover {
+    background-color: #218838;
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 768px) {
+    .recipe-card {
+        margin: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .modal-content {
+        width: 95%; /* Adjust modal width for smaller screens */
+        max-width: none; /* Remove max-width restriction for smaller screens */
+    }
+
+    .modal-content form textarea {
+        height: auto; /* Adjust height to content */
+    }
 }
 
 /* For larger screens */
@@ -76,5 +137,17 @@ header {
 
     main {
         text-align: center;
+    }
+
+    .modal-content {
+        width: 80%; /* Adjust modal width for larger screens */
+        max-width: 1200px; /* Larger max-width for full screen */
+    }
+
+    .modal-content form label,
+    .modal-content form input,
+    .modal-content form textarea,
+    .modal-content form button {
+        margin-bottom: 1.5rem; /* Increase spacing for larger screens */
     }
 }
